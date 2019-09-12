@@ -1,3 +1,7 @@
+# This is a BRAND NEW fork of ecstatic. IT IS NOT READY FOR PRODUCTION USE AT THIS TIME
+
+The rest of this document is the README of the original project
+
 # THIS PROJECT IS UNMAINTAINED AND DEPRECATED
 
 Please use something else. See: https://github.com/jfhbrook/node-ecstatic/issues/259
