@@ -13,7 +13,7 @@
   "scripts": {
     "prepublishOnly": "rollup -c rollup.config.js",
     "pretest": "rollup -c rollup.config.js",
-    "test": "tap test/*.js",
+    "test": "tap --jobs-auto --coverage test/*.js",
     "posttest": "tap --coverage-report=clover"
   },
   "bin": "./bin/strat.js",
