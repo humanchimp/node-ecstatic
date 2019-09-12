@@ -9,7 +9,7 @@ This is a _maintained_ fork of https://github.com/jfhbrook/node-ecstatic.
 
 To install using yarn:
 ```
-npm add @topl/strat
+yarn add @topl/strat
 ```
 
 ## docs
