@@ -19,3 +19,5 @@ results
 node_modules
 npm-debug.log
 dist
+bin/lib.js
+bin/lib.js.map
