@@ -12,8 +12,6 @@ mkdirp.sync(`${root}/emptyDir`);
 
 const cases = require('./fixtures/common-cases-error');
 
-console.log('cases', cases);
-
 test('core', (t) => {
   const filenames = Object.keys(cases);
   const port = Math.floor((Math.random() * ((1 << 16) - 1e4)) + 1e4);

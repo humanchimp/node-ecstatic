@@ -11,6 +11,8 @@
   "main": "./dist/cjs/strat.js",
   "module": "./dist/esm/strat.js",
   "scripts": {
+    "prepublishOnly": "rollup -c rollup.config.js",
+    "pretest": "rollup -c rollup.config.js",
     "test": "tap test/*.js",
     "posttest": "tap --coverage-report=clover"
   },
