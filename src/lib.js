@@ -10,57 +10,66 @@ import status from "./strat/status-handlers";
 import generateEtag from "./strat/etag";
 import optsParser from "./strat/opts";
 
-const version = '{{VERSION}}';
+const version = "{{VERSION}}";
 
 let strat = null;
 
 // See: https://github.com/humanchimp/strat/issues/109
 function decodePathname(pathname) {
-  const pieces = pathname.replace(/\\/g, '/').split('/');
+  const pieces = pathname.replace(/\\/g, "/").split("/");
 
-  return path.normalize(pieces.map((rawPiece) => {
-    const piece = decodeURIComponent(rawPiece);
+  return path.normalize(
+    pieces
+      .map(rawPiece => {
+        const piece = decodeURIComponent(rawPiece);
 
-    if (process.platform === 'win32' && /\\/.test(piece)) {
-      throw new Error('Invalid forward slash character');
-    }
+        if (process.platform === "win32" && /\\/.test(piece)) {
+          throw new Error("Invalid forward slash character");
+        }
 
-    return piece;
-  }).join('/'));
+        return piece;
+      })
+      .join("/")
+  );
 }
-
 
 // Check to see if we should try to compress a file with gzip.
 function shouldCompressGzip(req) {
   const headers = req.headers;
 
-  return headers && headers['accept-encoding'] &&
-    headers['accept-encoding']
-      .split(',')
-      .some(el => ['*', 'compress', 'gzip', 'deflate'].indexOf(el.trim()) !== -1)
-  ;
+  return (
+    headers &&
+    headers["accept-encoding"] &&
+    headers["accept-encoding"]
+      .split(",")
+      .some(
+        el => ["*", "compress", "gzip", "deflate"].indexOf(el.trim()) !== -1
+      )
+  );
 }
 
 function shouldCompressBrotli(req) {
   const headers = req.headers;
 
-  return headers && headers['accept-encoding'] &&
-    headers['accept-encoding']
-      .split(',')
-      .some(el => ['*', 'br'].indexOf(el.trim()) !== -1)
-  ;
+  return (
+    headers &&
+    headers["accept-encoding"] &&
+    headers["accept-encoding"]
+      .split(",")
+      .some(el => ["*", "br"].indexOf(el.trim()) !== -1)
+  );
 }
 
 function hasGzipId12(gzipped, cb) {
   const stream = fs.createReadStream(gzipped, { start: 0, end: 1 });
-  let buffer = Buffer.from('');
+  let buffer = Buffer.from("");
   let hasBeenCalled = false;
 
-  stream.on('data', (chunk) => {
+  stream.on("data", chunk => {
     buffer = Buffer.concat([buffer, chunk], 2);
   });
 
-  stream.on('error', (err) => {
+  stream.on("error", err => {
     if (hasBeenCalled) {
       throw err;
     }
@@ -69,7 +78,7 @@ function hasGzipId12(gzipped, cb) {
     cb(err);
   });
 
-  stream.on('close', () => {
+  stream.on("close", () => {
     if (hasBeenCalled) {
       return;
     }
@@ -79,12 +88,11 @@ function hasGzipId12(gzipped, cb) {
   });
 }
 
-
 export default function createMiddleware(_dir, _options) {
   let dir;
   let options;
 
-  if (typeof _dir === 'string') {
+  if (typeof _dir === "string") {
     dir = _dir;
     options = _options;
   } else {
@@ -92,7 +100,7 @@ export default function createMiddleware(_dir, _options) {
     dir = options.root;
   }
 
-  const root = path.join(path.resolve(dir), '/');
+  const root = path.join(path.resolve(dir), "/");
   const opts = optsParser(options);
   const cache = opts.cache;
   const autoIndex = opts.autoIndex;
@@ -106,7 +114,7 @@ export default function createMiddleware(_dir, _options) {
 
   opts.root = dir;
   if (defaultExt && /^\./.test(defaultExt)) {
-    defaultExt = defaultExt.replace(/^\./, '');
+    defaultExt = defaultExt.replace(/^\./, "");
   }
 
   if (opts.mimeTypes) {
@@ -116,10 +124,10 @@ export default function createMiddleware(_dir, _options) {
     } catch (e) {
       // swallow parse errors, treat this as a string mimetype input
     }
-    if (typeof opts.mimeTypes === 'object') {
+    if (typeof opts.mimeTypes === "object") {
       mime.define(opts.mimeTypes);
     }
-    if (typeof opts.mimeTypes === 'function') {
+    if (typeof opts.mimeTypes === "function") {
       mime.setCustomGetType(opts.mimeTypes);
     }
   }
@@ -129,8 +137,8 @@ export default function createMiddleware(_dir, _options) {
       return false;
     }
 
-    const clientModifiedSince = req.headers['if-modified-since'];
-    const clientEtag = req.headers['if-none-match'];
+    const clientModifiedSince = req.headers["if-modified-since"];
+    const clientEtag = req.headers["if-none-match"];
     let clientModifiedDate;
 
     if (!clientModifiedSince && !clientEtag) {
@@ -147,7 +155,7 @@ export default function createMiddleware(_dir, _options) {
         return false;
       }
 
-      if (clientModifiedDate.toString() === 'Invalid Date') {
+      if (clientModifiedDate.toString() === "Invalid Date") {
         return false;
       }
       // If the client's copy is older than the server's, don't return 304
@@ -159,10 +167,17 @@ export default function createMiddleware(_dir, _options) {
     if (clientEtag) {
       // Do a strong or weak etag comparison based on setting
       // https://www.ietf.org/rfc/rfc2616.txt Section 13.3.3
-      if (opts.weakCompare && clientEtag !== serverEtag
-        && clientEtag !== `W/${serverEtag}` && `W/${clientEtag}` !== serverEtag) {
+      if (
+        opts.weakCompare &&
+        clientEtag !== serverEtag &&
+        clientEtag !== `W/${serverEtag}` &&
+        `W/${clientEtag}` !== serverEtag
+      ) {
         return false;
-      } else if (!opts.weakCompare && (clientEtag !== serverEtag || clientEtag.indexOf('W/') === 0)) {
+      } else if (
+        !opts.weakCompare &&
+        (clientEtag !== serverEtag || clientEtag.indexOf("W/") === 0)
+      ) {
         return false;
       }
     }
@@ -203,10 +218,7 @@ export default function createMiddleware(_dir, _options) {
     }
 
     file = path.normalize(
-      path.join(
-        root,
-        path.relative(path.join('/', baseDir), pathname)
-      )
+      path.join(root, path.relative(path.join("/", baseDir), pathname))
     );
     // determine compressed forms if they were to exist
     gzippedFile = `${file}.gz`;
@@ -214,14 +226,14 @@ export default function createMiddleware(_dir, _options) {
 
     if (serverHeader !== false) {
       // Set common headers.
-      res.setHeader('server', `strat-${version}`);
+      res.setHeader("server", `strat-${version}`);
     }
 
-    Object.keys(headers).forEach((key) => {
+    Object.keys(headers).forEach(key => {
       res.setHeader(key, headers[key]);
     });
 
-    if (req.method === 'OPTIONS' && handleOptionsMethod) {
+    if (req.method === "OPTIONS" && handleOptionsMethod) {
       res.end();
       return;
     }
@@ -233,11 +245,10 @@ export default function createMiddleware(_dir, _options) {
       return;
     }
 
-    if (req.method && (req.method !== 'GET' && req.method !== 'HEAD')) {
+    if (req.method && (req.method !== "GET" && req.method !== "HEAD")) {
       status[405](res, next);
       return;
     }
-
 
     function serve(stat) {
       if (onFinished.isFinished(res)) {
@@ -246,12 +257,12 @@ export default function createMiddleware(_dir, _options) {
 
       // Do a MIME lookup, fall back to octet-stream and handle gzip
       // and brotli special case.
-      const defaultType = opts.contentType || 'application/octet-stream';
+      const defaultType = opts.contentType || "application/octet-stream";
 
       let contentType = mime.getType(file, defaultType);
       let charSet;
-      const range = (req.headers && req.headers.range);
-      const lastModified = (new Date(stat.mtime)).toUTCString();
+      const range = req.headers && req.headers.range;
+      const lastModified = new Date(stat.mtime).toUTCString();
       const etag = generateEtag(stat, weakEtags);
       let cacheControl = cache;
       if (contentType) {
@@ -261,26 +272,31 @@ export default function createMiddleware(_dir, _options) {
         }
       }
 
-      if (file === gzippedFile) { // is .gz picked up
-        res.setHeader('Content-Encoding', 'gzip');
+      if (file === gzippedFile) {
+        // is .gz picked up
+        res.setHeader("Content-Encoding", "gzip");
         // strip gz ending and lookup mime type
-        contentType = mime.getType(path.basename(file, '.gz'), defaultType);
-      } else if (file === brotliFile) { // is .br picked up
-        res.setHeader('Content-Encoding', 'br');
+        contentType = mime.getType(path.basename(file, ".gz"), defaultType);
+      } else if (file === brotliFile) {
+        // is .br picked up
+        res.setHeader("Content-Encoding", "br");
         // strip br ending and lookup mime type
-        contentType = mime.getType(path.basename(file, '.br'), defaultType);
+        contentType = mime.getType(path.basename(file, ".br"), defaultType);
       }
 
-      if (typeof cacheControl === 'function') {
+      if (typeof cacheControl === "function") {
         cacheControl = cache(pathname);
       }
-      if (typeof cacheControl === 'number') {
+      if (typeof cacheControl === "number") {
         cacheControl = `max-age=${cacheControl}`;
       }
 
       if (range) {
         const total = stat.size;
-        const parts = range.trim().replace(/bytes=/, '').split('-');
+        const parts = range
+          .trim()
+          .replace(/bytes=/, "")
+          .split("-");
         const partialstart = parts[0];
         const partialend = parts[1];
         const start = parseInt(partialstart, 10);
@@ -288,27 +304,27 @@ export default function createMiddleware(_dir, _options) {
           total - 1,
           partialend ? parseInt(partialend, 10) : total - 1
         );
-        const chunksize = (end - start) + 1;
+        const chunksize = end - start + 1;
 
         if (start > end || isNaN(start) || isNaN(end)) {
-          status['416'](res, next);
+          status["416"](res, next);
           return;
         }
 
         res.writeHead(206, {
-          'Content-Range': `bytes ${start}-${end}/${total}`,
-          'Accept-Ranges': 'bytes',
-          'Content-Length': chunksize,
-          'Content-Type': contentType,
-          'cache-control': cacheControl,
-          'last-modified': lastModified,
-          etag,
+          "Content-Range": `bytes ${start}-${end}/${total}`,
+          "Accept-Ranges": "bytes",
+          "Content-Length": chunksize,
+          "Content-Type": contentType,
+          "cache-control": cacheControl,
+          "last-modified": lastModified,
+          etag
         });
 
         const stream = fs
           .createReadStream(file, { start, end })
-          .on('error', (err) => {
-            status['500'](res, next, { error: err });
+          .on("error", err => {
+            status["500"](res, next, { error: err });
           })
           .pipe(res);
         onFinished(res, () => {
@@ -318,9 +334,9 @@ export default function createMiddleware(_dir, _options) {
       }
 
       // TODO: Helper for this, with default headers.
-      res.setHeader('cache-control', cacheControl);
-      res.setHeader('last-modified', lastModified);
-      res.setHeader('etag', etag);
+      res.setHeader("cache-control", cacheControl);
+      res.setHeader("last-modified", lastModified);
+      res.setHeader("etag", etag);
 
       // Return a 304 if necessary
       if (shouldReturn304(req, lastModified, etag)) {
@@ -328,37 +344,36 @@ export default function createMiddleware(_dir, _options) {
         return;
       }
 
-      res.setHeader('content-length', stat.size);
-      res.setHeader('content-type', contentType);
+      res.setHeader("content-length", stat.size);
+      res.setHeader("content-type", contentType);
 
       // set the response statusCode if we have a request statusCode.
       // This only can happen if we have a 404 with some kind of 404.html
       // In all other cases where we have a file we serve the 200
       res.statusCode = req.statusCode || 200;
 
-      if (req.method === 'HEAD') {
+      if (req.method === "HEAD") {
         res.end();
         return;
       }
 
       const stream = fs
         .createReadStream(file)
-        .on('error', (err) => {
-          status['500'](res, next, { error: err });
+        .on("error", err => {
+          status["500"](res, next, { error: err });
         })
         .pipe(res);
       onFinished(res, () => {
         stream.destroy();
       });
-      res.on('close', () => {
+      res.on("close", () => {
         stream.destroy();
       });
     }
 
-
     function statFile() {
       fs.stat(file, (err, stat) => {
-        if (err && (err.code === 'ENOENT' || err.code === 'ENOTDIR')) {
+        if (err && (err.code === "ENOENT" || err.code === "ENOTDIR")) {
           if (req.statusCode === 404) {
             // This means we're already trying ./404.html and can not find it.
             // So send plain text response with 404 status code
@@ -366,17 +381,29 @@ export default function createMiddleware(_dir, _options) {
           } else if (!path.extname(parsed.pathname).length && defaultExt) {
             // If there is no file extension in the path and we have a default
             // extension try filename and default extension combination before rendering 404.html.
-            middleware({
-              url: `${parsed.pathname}.${defaultExt}${(parsed.search) ? parsed.search : ''}`,
-              headers: req.headers,
-            }, res, next);
+            middleware(
+              {
+                url: `${parsed.pathname}.${defaultExt}${
+                  parsed.search ? parsed.search : ""
+                }`,
+                headers: req.headers
+              },
+              res,
+              next
+            );
           } else {
             // Try to serve default ./404.html
-            middleware({
-              url: (handleError ? `/${path.join(baseDir, `404.${defaultExt}`)}` : req.url),
-              headers: req.headers,
-              statusCode: 404,
-            }, res, next);
+            middleware(
+              {
+                url: handleError
+                  ? `/${path.join(baseDir, `404.${defaultExt}`)}`
+                  : req.url,
+                headers: req.headers,
+                statusCode: 404
+              },
+              res,
+              next
+            );
           }
         } else if (err) {
           status[500](res, next, { error: err });
@@ -386,35 +413,38 @@ export default function createMiddleware(_dir, _options) {
             return;
           }
 
-
           // 302 to / if necessary
           if (!pathname.match(/\/$/)) {
             res.statusCode = 302;
-            const q = parsed.query ? `?${parsed.query}` : '';
-            res.setHeader('location', `${parsed.pathname}/${q}`);
+            const q = parsed.query ? `?${parsed.query}` : "";
+            res.setHeader("location", `${parsed.pathname}/${q}`);
             res.end();
             return;
           }
 
           if (autoIndex) {
-            middleware({
-              url: urlJoin(
-                encodeURIComponent(pathname),
-                `/index.${defaultExt}`
-              ),
-              headers: req.headers,
-            }, res, (autoIndexError) => {
-              if (autoIndexError) {
-                status[500](res, next, { error: autoIndexError });
-                return;
-              }
-              if (opts.showDir) {
-                showDir(opts, stat)(req, res);
-                return;
-              }
+            middleware(
+              {
+                url: urlJoin(
+                  encodeURIComponent(pathname),
+                  `/index.${defaultExt}`
+                ),
+                headers: req.headers
+              },
+              res,
+              autoIndexError => {
+                if (autoIndexError) {
+                  status[500](res, next, { error: autoIndexError });
+                  return;
+                }
+                if (opts.showDir) {
+                  showDir(opts, stat)(req, res);
+                  return;
+                }
 
-              status[403](res, next);
-            });
+                status[403](res, next);
+              }
+            );
             return;
           }
 
@@ -470,8 +500,7 @@ export default function createMiddleware(_dir, _options) {
       statFile();
     }
   };
-};
-
+}
 
 createMiddleware.version = version;
 createMiddleware.showDir = showDir;

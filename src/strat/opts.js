@@ -3,7 +3,7 @@
 import defaults from "./defaults.json";
 import aliases from "./aliases.json";
 
-export default (opts) => {
+export default opts => {
   let autoIndex = defaults.autoIndex;
   let showDir = defaults.showDir;
   let showDotfiles = defaults.showDotfiles;
@@ -24,7 +24,7 @@ export default (opts) => {
   let handleOptionsMethod = defaults.handleOptionsMethod;
 
   function isDeclared(k) {
-    return typeof opts[k] !== 'undefined' && opts[k] !== null;
+    return typeof opts[k] !== "undefined" && opts[k] !== null;
   }
 
   function setHeader(str) {
@@ -36,9 +36,8 @@ export default (opts) => {
     }
   }
 
-
   if (opts) {
-    aliases.autoIndex.some((k) => {
+    aliases.autoIndex.some(k => {
       if (isDeclared(k)) {
         autoIndex = opts[k];
         return true;
@@ -46,7 +45,7 @@ export default (opts) => {
       return false;
     });
 
-    aliases.showDir.some((k) => {
+    aliases.showDir.some(k => {
       if (isDeclared(k)) {
         showDir = opts[k];
         return true;
@@ -54,7 +53,7 @@ export default (opts) => {
       return false;
     });
 
-    aliases.showDotfiles.some((k) => {
+    aliases.showDotfiles.some(k => {
       if (isDeclared(k)) {
         showDotfiles = opts[k];
         return true;
@@ -62,7 +61,7 @@ export default (opts) => {
       return false;
     });
 
-    aliases.humanReadable.some((k) => {
+    aliases.humanReadable.some(k => {
       if (isDeclared(k)) {
         humanReadable = opts[k];
         return true;
@@ -70,7 +69,7 @@ export default (opts) => {
       return false;
     });
 
-    aliases.hidePermissions.some((k) => {
+    aliases.hidePermissions.some(k => {
       if (isDeclared(k)) {
         hidePermissions = opts[k];
         return true;
@@ -78,7 +77,7 @@ export default (opts) => {
       return false;
     });
 
-    aliases.si.some((k) => {
+    aliases.si.some(k => {
       if (isDeclared(k)) {
         si = opts[k];
         return true;
@@ -86,29 +85,29 @@ export default (opts) => {
       return false;
     });
 
-    if (opts.defaultExt && typeof opts.defaultExt === 'string') {
+    if (opts.defaultExt && typeof opts.defaultExt === "string") {
       defaultExt = opts.defaultExt;
     }
 
-    if (typeof opts.cache !== 'undefined' && opts.cache !== null) {
-      if (typeof opts.cache === 'string') {
+    if (typeof opts.cache !== "undefined" && opts.cache !== null) {
+      if (typeof opts.cache === "string") {
         cache = opts.cache;
-      } else if (typeof opts.cache === 'number') {
+      } else if (typeof opts.cache === "number") {
         cache = `max-age=${opts.cache}`;
-      } else if (typeof opts.cache === 'function') {
+      } else if (typeof opts.cache === "function") {
         cache = opts.cache;
       }
     }
 
-    if (typeof opts.gzip !== 'undefined' && opts.gzip !== null) {
+    if (typeof opts.gzip !== "undefined" && opts.gzip !== null) {
       gzip = opts.gzip;
     }
 
-    if (typeof opts.brotli !== 'undefined' && opts.brotli !== null) {
+    if (typeof opts.brotli !== "undefined" && opts.brotli !== null) {
       brotli = opts.brotli;
     }
 
-    aliases.handleError.some((k) => {
+    aliases.handleError.some(k => {
       if (isDeclared(k)) {
         handleError = opts[k];
         return true;
@@ -116,20 +115,21 @@ export default (opts) => {
       return false;
     });
 
-    aliases.cors.forEach((k) => {
+    aliases.cors.forEach(k => {
       if (isDeclared(k) && opts[k]) {
         handleOptionsMethod = true;
-        headers['Access-Control-Allow-Origin'] = '*';
-        headers['Access-Control-Allow-Headers'] = 'Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match, If-Unmodified-Since';
+        headers["Access-Control-Allow-Origin"] = "*";
+        headers["Access-Control-Allow-Headers"] =
+          "Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match, If-Unmodified-Since";
       }
     });
 
-    aliases.headers.forEach((k) => {
+    aliases.headers.forEach(k => {
       if (isDeclared(k)) {
         if (Array.isArray(opts[k])) {
           opts[k].forEach(setHeader);
-        } else if (opts[k] && typeof opts[k] === 'object') {
-          Object.keys(opts[k]).forEach((key) => {
+        } else if (opts[k] && typeof opts[k] === "object") {
+          Object.keys(opts[k]).forEach(key => {
             headers[key] = opts[k][key];
           });
         } else {
@@ -138,7 +138,7 @@ export default (opts) => {
       }
     });
 
-    aliases.serverHeader.some((k) => {
+    aliases.serverHeader.some(k => {
       if (isDeclared(k)) {
         serverHeader = opts[k];
         return true;
@@ -146,7 +146,7 @@ export default (opts) => {
       return false;
     });
 
-    aliases.contentType.some((k) => {
+    aliases.contentType.some(k => {
       if (isDeclared(k)) {
         contentType = opts[k];
         return true;
@@ -154,7 +154,7 @@ export default (opts) => {
       return false;
     });
 
-    aliases.mimeType.some((k) => {
+    aliases.mimeType.some(k => {
       if (isDeclared(k)) {
         mimeTypes = opts[k];
         return true;
@@ -162,7 +162,7 @@ export default (opts) => {
       return false;
     });
 
-    aliases.weakEtags.some((k) => {
+    aliases.weakEtags.some(k => {
       if (isDeclared(k)) {
         weakEtags = opts[k];
         return true;
@@ -170,7 +170,7 @@ export default (opts) => {
       return false;
     });
 
-    aliases.weakCompare.some((k) => {
+    aliases.weakCompare.some(k => {
       if (isDeclared(k)) {
         weakCompare = opts[k];
         return true;
@@ -178,7 +178,7 @@ export default (opts) => {
       return false;
     });
 
-    aliases.handleOptionsMethod.some((k) => {
+    aliases.handleOptionsMethod.some(k => {
       if (isDeclared(k)) {
         handleOptionsMethod = handleOptionsMethod || opts[k];
         return true;
@@ -196,7 +196,7 @@ export default (opts) => {
     hidePermissions,
     si,
     defaultExt,
-    baseDir: (opts && opts.baseDir) || '/',
+    baseDir: (opts && opts.baseDir) || "/",
     gzip,
     brotli,
     handleError,
@@ -206,6 +206,6 @@ export default (opts) => {
     mimeTypes,
     weakEtags,
     weakCompare,
-    handleOptionsMethod,
+    handleOptionsMethod
   };
 };
