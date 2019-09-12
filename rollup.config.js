@@ -2,6 +2,14 @@ import packageJson from "./package.json";
 import json from "rollup-plugin-json";
 import commonjs from "rollup-plugin-commonjs";
 import resolve from "rollup-plugin-node-resolve";
+import { builtinModules } from "module";
+
+const plugins = [json(), commonjs(), resolve()];
+const external = [].concat(
+  builtinModules,
+  Object.keys(packageJson.dependencies),
+  Object.keys(packageJson.devDependencies)
+);
 
 export default [
   {
@@ -18,15 +26,17 @@ export default [
         sourcemap: true
       }
     ],
-    plugins: [json(), commonjs(), resolve()]
+    plugins,
+    external
   },
   {
     input: "src/bin.js",
     output: {
       format: "cjs",
-      file: 'bin/lib.js',
+      file: "dist/bin/lib.js",
       sourcemap: true
     },
-    plugins: [json(), commonjs(), resolve()]
+    plugins,
+    external
   }
 ];
