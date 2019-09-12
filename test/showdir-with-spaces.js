@@ -1,7 +1,5 @@
-'use strict';
-
 const test = require('tap').test;
-const ecstatic = require('../lib/ecstatic');
+const strat = require('..');
 const http = require('http');
 const request = require('request');
 const path = require('path');
@@ -14,7 +12,7 @@ test('directory listing when directory name contains spaces', (t) => {
   const uri = `http://localhost:${port}${path.join('/', baseDir, 'subdir_with%20space')}`;
 
   const server = http.createServer(
-    ecstatic({
+    strat({
       root,
       baseDir,
       showDir: true,

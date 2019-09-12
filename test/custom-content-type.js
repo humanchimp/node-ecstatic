@@ -1,14 +1,12 @@
-'use strict';
-
 const test = require('tap').test;
 const http = require('http');
 const request = require('request');
-const ecstatic = require('../');
+const strat = require('..');
 
 test('custom contentType', (t) => {
   let server = null;
   try {
-    server = http.createServer(ecstatic({
+    server = http.createServer(strat({
       root: `${__dirname}/public/`,
       mimetype: {
         'application/jon': ['opml'],

@@ -1,5 +1,3 @@
-'use strict';
-
 /* this test suit is incomplete  2015-12-18 */
 
 const test = require('tap').test;
@@ -15,8 +13,8 @@ function getRandomInt(min, max) {
   return Math.floor(Math.random() * ((max - min) + 1)) + min;
 }
 
-function startEcstatic(args) {
-  return spawn(node, [require.resolve('../lib/bin.js')].concat(args));
+function startstrat(args) {
+  return spawn(node, [require.resolve('../bin/strat.js')].concat(args));
 }
 
 function checkServerIsRunning(url, t, _cb) {
@@ -57,12 +55,12 @@ test('setting port via cli - default port', (t) => {
 
   const port = defaultPort;
   const options = ['.'];
-  const ecstatic = startEcstatic(options);
+  const strat = startstrat(options);
 
-  tearDown(ecstatic, t);
+  tearDown(strat, t);
 
-  ecstatic.stdout.on('data', () => {
-    t.pass('ecstatic should be started');
+  strat.stdout.on('data', () => {
+    t.pass('strat should be started');
     checkServerIsRunning(`${defaultUrl}:${port}`, t);
   });
 });
@@ -72,12 +70,12 @@ test('setting port via cli - custom port', (t) => {
 
   const port = getRandomPort();
   const options = ['.', '--port', port];
-  const ecstatic = startEcstatic(options);
+  const strat = startstrat(options);
 
-  tearDown(ecstatic, t);
+  tearDown(strat, t);
 
-  ecstatic.stdout.on('data', () => {
-    t.pass('ecstatic should be started');
+  strat.stdout.on('data', () => {
+    t.pass('strat should be started');
     checkServerIsRunning(`${defaultUrl}:${port}`, t);
   });
 });
@@ -89,13 +87,13 @@ test('setting mimeTypes via cli - directly', (t) => {
   const mimeType = ['--mimeTypes', '{ "application/x-my-type": ["opml"] }'];
   const options = [root, '--port', port].concat(mimeType);
 
-  const ecstatic = startEcstatic(options);
+  const strat = startstrat(options);
 
   // TODO: remove error handler
-  tearDown(ecstatic, t);
+  tearDown(strat, t);
 
-  ecstatic.stdout.on('data', () => {
-    t.pass('ecstatic should be started');
+  strat.stdout.on('data', () => {
+    t.pass('strat should be started');
     checkServerIsRunning(`${defaultUrl}:${port}/custom_mime_type.opml`, t, (err, res) => {
       t.equal(res.headers['content-type'], 'application/x-my-type');
     });

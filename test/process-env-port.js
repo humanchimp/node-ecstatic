@@ -1,5 +1,3 @@
-'use strict';
-
 const test = require('tap').test;
 const request = require('request');
 const spawn = require('child_process').spawn;
@@ -25,15 +23,15 @@ function checkServerIsRunning(url, ps, t) {
 
 function startServer(url, port, t) {
   t.plan(2);
-  const ecstatic = spawn(process.execPath, [`${__dirname}/../lib/bin.js`], {
+  const strat = spawn(process.execPath, [`${__dirname}/../bin/strat.js`], {
     env: {
       PORT: String(port),
     },
   });
 
-  ecstatic.stdout.on('data', () => {
-    t.pass('ecstatic should be started');
-    checkServerIsRunning(url, ecstatic, t);
+  strat.stdout.on('data', () => {
+    t.pass('strat should be started');
+    checkServerIsRunning(url, strat, t);
   });
 }
 

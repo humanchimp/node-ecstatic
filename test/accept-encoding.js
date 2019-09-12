@@ -1,7 +1,5 @@
-'use strict';
-
 const test = require('tap').test;
-const ecstatic = require('../lib/ecstatic');
+const strat = require('..');
 const http = require('http');
 const request = require('request');
 
@@ -10,7 +8,7 @@ const root = `${__dirname}/public`;
 test('properly handles whitespace in accept-encoding', (t) => {
   t.plan(3);
 
-  const server = http.createServer(ecstatic({
+  const server = http.createServer(strat({
     root,
     autoIndex: true,
     gzip: true
@@ -39,7 +37,7 @@ test('properly handles whitespace in accept-encoding', (t) => {
 test('properly handles single accept-encoding entry', (t) => {
   t.plan(3);
 
-  const server = http.createServer(ecstatic({
+  const server = http.createServer(strat({
     root,
     autoIndex: true,
     gzip: true

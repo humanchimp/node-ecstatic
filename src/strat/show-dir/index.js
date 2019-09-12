@@ -1,20 +1,16 @@
-'use strict';
+import fs from "fs";
+import path from "path";
+import he from "he";
+import url from "url";
+import status from "../status-handlers";
 
-const styles = require('./styles');
-const permsToString = require('./perms-to-string');
-const sizeToString = require('./size-to-string');
-const sortFiles = require('./sort-files');
-const fs = require('fs');
-const path = require('path');
-const he = require('he');
-const etag = require('../etag');
-const url = require('url');
-const status = require('../status-handlers');
+import etag from "../etag";
+import { icons as supportedIcons, css } from "./styles";
+import permsToString from "./perms-to-string";
+import sizeToString from "./size-to-string";
+import sortFiles from "./sort-files";
 
-const supportedIcons = styles.icons;
-const css = styles.css;
-
-module.exports = (opts) => {
+export default (opts) => {
   // opts are parsed by opts.js, defaults already applied
   const cache = opts.cache;
   const root = path.resolve(opts.root);
@@ -118,7 +114,7 @@ module.exports = (opts) => {
           html += '</table>\n';
           html += `<br><address>Node.js
             ${process.version}
-            / <a href="https://github.com/jfhbrook/node-ecstatic">ecstatic</a> ` +
+            / <a href="https://github.com/jfhbrook/node-ecstatic">strat</a> ` +
             `server running @
             ${he.encode(req.headers.host || '')}
             </address>\n` +

@@ -1,11 +1,9 @@
-'use strict';
-
 // This is so you can have options aliasing and defaults in one place.
 
-const defaults = require('./defaults.json');
-const aliases = require('./aliases.json');
+import defaults from "./defaults.json";
+import aliases from "./aliases.json";
 
-module.exports = (opts) => {
+export default (opts) => {
   let autoIndex = defaults.autoIndex;
   let showDir = defaults.showDir;
   let showDotfiles = defaults.showDotfiles;

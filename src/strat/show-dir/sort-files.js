@@ -1,9 +1,7 @@
-'use strict';
+import fs from "fs";
+import path from "path";
 
-const fs = require('fs');
-const path = require('path');
-
-module.exports = function sortByIsDirectory(dir, paths, cb) {
+export default function sortByIsDirectory(dir, paths, cb) {
   // take the listing file names in `dir`
   // returns directory and file array, each entry is
   // of the array a [name, stat] tuple

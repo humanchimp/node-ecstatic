@@ -1,12 +1,10 @@
-'use strict';
-
 const test = require('tap').test;
-const ecstatic = require('../lib/ecstatic');
+const strat = require('..');
 const http = require('http');
 const request = require('request');
 
 test('malformed uri', (t) => {
-  const server = http.createServer(ecstatic(__dirname));
+  const server = http.createServer(strat(__dirname));
 
   t.plan(2);
 

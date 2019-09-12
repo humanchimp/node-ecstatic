@@ -1,14 +1,12 @@
-'use strict';
-
 const test = require('tap').test;
-const ecstatic = require('../');
+const strat = require('..');
 const http = require('http');
 const request = require('request');
 
 test('serverHeader should exist', (t) => {
   t.plan(2);
 
-  const server = http.createServer(ecstatic(`${__dirname}/public/subdir`));
+  const server = http.createServer(strat(`${__dirname}/public/subdir`));
 
   t.on('end', () => { server.close(); });
 
@@ -16,7 +14,7 @@ test('serverHeader should exist', (t) => {
     const port = server.address().port;
     request.get(`http://localhost:${port}`, (err, res) => {
       t.ifError(err);
-      t.equal(res.headers.server, `ecstatic-${ecstatic.version}`);
+      t.equal(res.headers.server, `strat-${strat.version}`);
     });
   });
 });
@@ -24,7 +22,7 @@ test('serverHeader should exist', (t) => {
 test('serverHeader should not exist', (t) => {
   t.plan(2);
 
-  const server = http.createServer(ecstatic(`${__dirname}/public/subdir`, {
+  const server = http.createServer(strat(`${__dirname}/public/subdir`, {
     serverHeader: false,
   }));
 

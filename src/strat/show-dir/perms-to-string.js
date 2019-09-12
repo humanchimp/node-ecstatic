@@ -1,6 +1,4 @@
-'use strict';
-
-module.exports = function permsToString(stat) {
+export default function permsToString(stat) {
   if (!stat.isDirectory || !stat.mode) {
     return '???!!!???';
   }

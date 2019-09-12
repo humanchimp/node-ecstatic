@@ -1,7 +1,5 @@
-'use strict';
-
 const test = require('tap').test;
-const ecstatic = require('../lib/ecstatic');
+const strat = require('..');
 const http = require('http');
 const request = require('request');
 const mkdirp = require('mkdirp');
@@ -14,12 +12,14 @@ mkdirp.sync(`${root}/emptyDir`);
 
 const cases = require('./fixtures/common-cases-error');
 
+console.log('cases', cases);
+
 test('core', (t) => {
   const filenames = Object.keys(cases);
   const port = Math.floor((Math.random() * ((1 << 16) - 1e4)) + 1e4);
 
   const server = http.createServer(
-    ecstatic({
+    strat({
       root,
       gzip: true,
       baseDir,

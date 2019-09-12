@@ -1,7 +1,5 @@
-'use strict';
-
 const test = require('tap').test;
-const ecstatic = require('../lib/ecstatic');
+const strat = require('..');
 const http = require('http');
 const path = require('path');
 const request = require('request');
@@ -12,7 +10,7 @@ test('cors defaults to false', (t) => {
   t.plan(4);
 
   const server = http.createServer(
-    ecstatic({
+    strat({
       root,
       autoIndex: true,
       defaultExt: 'html',
@@ -39,7 +37,7 @@ test('cors set to false', (t) => {
   t.plan(4);
 
   const server = http.createServer(
-    ecstatic({
+    strat({
       root,
       cors: false,
       autoIndex: true,
@@ -67,7 +65,7 @@ test('cors set to true', (t) => {
   t.plan(4);
 
   const server = http.createServer(
-    ecstatic({
+    strat({
       root,
       cors: true,
       autoIndex: true,
@@ -94,7 +92,7 @@ test('CORS set to true', (t) => {
   t.plan(4);
 
   const server = http.createServer(
-    ecstatic({
+    strat({
       root,
       CORS: true,
       autoIndex: true,

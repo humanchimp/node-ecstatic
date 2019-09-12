@@ -1,22 +1,20 @@
-#! /usr/bin/env node
+import path from "path";
+import fs from "fs";
+import url from "url";
+import urlJoin from "url-join";
+import onFinished from "on-finished";
 
-'use strict';
+import * as mime from "./strat/mime";
+import showDir from "./strat/show-dir/index";
+import status from "./strat/status-handlers";
+import generateEtag from "./strat/etag";
+import optsParser from "./strat/opts";
 
-const path = require('path');
-const fs = require('fs');
-const url = require('url');
-const mime = require('./ecstatic/mime');
-const urlJoin = require('url-join');
-const showDir = require('./ecstatic/show-dir');
-const version = require('../package.json').version;
-const status = require('./ecstatic/status-handlers');
-const generateEtag = require('./ecstatic/etag');
-const optsParser = require('./ecstatic/opts');
-const onFinished = require('on-finished');
+const version = '{{VERSION}}';
 
-let ecstatic = null;
+let strat = null;
 
-// See: https://github.com/jesusabdullah/node-ecstatic/issues/109
+// See: https://github.com/humanchimp/strat/issues/109
 function decodePathname(pathname) {
   const pieces = pathname.replace(/\\/g, '/').split('/');
 
@@ -82,7 +80,7 @@ function hasGzipId12(gzipped, cb) {
 }
 
 
-module.exports = function createMiddleware(_dir, _options) {
+export default function createMiddleware(_dir, _options) {
   let dir;
   let options;
 
@@ -216,7 +214,7 @@ module.exports = function createMiddleware(_dir, _options) {
 
     if (serverHeader !== false) {
       // Set common headers.
-      res.setHeader('server', `ecstatic-${version}`);
+      res.setHeader('server', `strat-${version}`);
     }
 
     Object.keys(headers).forEach((key) => {
@@ -475,7 +473,6 @@ module.exports = function createMiddleware(_dir, _options) {
 };
 
 
-ecstatic = module.exports;
-ecstatic.version = version;
-ecstatic.showDir = showDir;
-ecstatic.mime = mime;
+createMiddleware.version = version;
+createMiddleware.showDir = showDir;
+createMiddleware.mime = mime;

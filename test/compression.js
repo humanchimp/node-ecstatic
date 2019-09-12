@@ -1,7 +1,5 @@
-'use strict';
-
 const test = require('tap').test;
-const ecstatic = require('../lib/ecstatic');
+const strat = require('..');
 const http = require('http');
 const request = require('request');
 
@@ -10,7 +8,7 @@ const root = `${__dirname}/public`;
 test('serves brotli-encoded file when available', (t) => {
   t.plan(3);
 
-  const server = http.createServer(ecstatic({
+  const server = http.createServer(strat({
     root,
     brotli: true,
     autoIndex: true
@@ -39,7 +37,7 @@ test('serves brotli-encoded file when available', (t) => {
 test('serves gzip-encoded file when brotli not available', (t) => {
   t.plan(3);
 
-  const server = http.createServer(ecstatic({
+  const server = http.createServer(strat({
     root,
     brotli: true,
     gzip: true,
@@ -69,7 +67,7 @@ test('serves gzip-encoded file when brotli not available', (t) => {
 test('serves gzip-encoded file when brotli not accepted', (t) => {
   t.plan(3);
 
-  const server = http.createServer(ecstatic({
+  const server = http.createServer(strat({
     root,
     brotli: true,
     gzip: true,
@@ -99,7 +97,7 @@ test('serves gzip-encoded file when brotli not accepted', (t) => {
 test('serves gzip-encoded file when brotli not enabled', (t) => {
   t.plan(3);
 
-  const server = http.createServer(ecstatic({
+  const server = http.createServer(strat({
     root,
     brotli: false,
     gzip: true,
@@ -129,7 +127,7 @@ test('serves gzip-encoded file when brotli not enabled', (t) => {
 test('serves unencoded file when compression not accepted', (t) => {
   t.plan(3);
 
-  const server = http.createServer(ecstatic({
+  const server = http.createServer(strat({
     root,
     brotli: true,
     gzip: true,
@@ -159,7 +157,7 @@ test('serves unencoded file when compression not accepted', (t) => {
 test('serves unencoded file when compression not enabled', (t) => {
   t.plan(3);
 
-  const server = http.createServer(ecstatic({
+  const server = http.createServer(strat({
     root,
     brotli: false,
     gzip: false,

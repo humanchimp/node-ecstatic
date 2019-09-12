@@ -1,7 +1,5 @@
-'use strict';
-
 const test = require('tap').test;
-const ecstatic = require('../lib/ecstatic');
+const strat = require('..');
 const http = require('http');
 const request = require('request');
 const mkdirp = require('mkdirp');
@@ -20,7 +18,7 @@ test('core', (t) => {
   const port = Math.floor((Math.random() * ((1 << 16) - 1e4)) + 1e4);
 
   const server = http.createServer(
-    ecstatic({
+    strat({
       root,
       gzip: true,
       baseDir,

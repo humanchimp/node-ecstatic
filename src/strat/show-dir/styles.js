@@ -1,6 +1,4 @@
-'use strict';
-
-const icons = require('./icons.json');
+import icons from "./icons.json";
 
 const IMG_SIZE = 16;
 
@@ -16,5 +14,4 @@ Object.keys(icons).forEach((key) => {
   css += '}\n\n';
 });
 
-exports.icons = icons;
-exports.css = css;
+export {icons, css};

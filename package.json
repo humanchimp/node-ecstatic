@@ -1,21 +1,20 @@
 {
-  "author": "Joshua Holbrook <josh@nodejitsu.com> (http://jesusabdullah.net)",
-  "name": "ecstatic",
+  "name": "@topl/strat",
+  "author": "Christopher Thorn <hi@lilthorny.party>",
   "description": "A simple static file server middleware",
-  "version": "4.1.2",
-  "homepage": "https://github.com/jfhbrook/node-ecstatic",
+  "version": "1.0.0",
+  "homepage": "https://github.com/humanchimp/strat",
   "repository": {
     "type": "git",
-    "url": "git@github.com:jfhbrook/node-ecstatic.git"
+    "url": "git@github.com:humanchimp/strat.git"
   },
-  "main": "./lib/ecstatic.js",
+  "main": "./dist/cjs/strat.js",
+  "module": "./dist/esm/strat.js",
   "scripts": {
-    "fix": "eslint --fix ./lib/ ./example/ ./test",
-    "pretest": "eslint ./lib/ ./example/ ./test",
-    "test": "tap --jobs-auto --coverage test/*.js",
+    "test": "tap test/*.js",
     "posttest": "tap --coverage-report=clover"
   },
-  "bin": "./lib/bin.js",
+  "bin": "./bin/strat.js",
   "keywords": [
     "static",
     "web",
@@ -40,6 +39,10 @@
     "express": "^4.16.3",
     "mkdirp": "^0.5.0",
     "request": "^2.88.0",
+    "rollup": "^1.21.2",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-json": "^4.0.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
     "tap": "^12.6.1"
   },
   "license": "MIT"

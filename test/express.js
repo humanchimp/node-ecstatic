@@ -1,7 +1,5 @@
-'use strict';
-
 const test = require('tap').test;
-const ecstatic = require('../lib/ecstatic');
+const strat = require('..');
 const http = require('http');
 const express = require('express');
 const request = require('request');
@@ -22,7 +20,7 @@ test('express', (t) => {
 
   const app = express();
 
-  app.use(ecstatic({
+  app.use(strat({
     root,
     gzip: true,
     baseDir,

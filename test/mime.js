@@ -1,7 +1,5 @@
-'use strict';
-
 const test = require('tap').test;
-const mime = require('../lib/ecstatic/mime');
+const { mime } = require('..');
 
 test('mime package lookup', (t) => {
   t.plan(7);
