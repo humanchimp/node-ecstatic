@@ -10,6 +10,9 @@
   },
   "main": "./dist/cjs/strat.js",
   "module": "./dist/esm/strat.js",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/@humanchimp"
+  },
   "scripts": {
     "prepublishOnly": "rollup -c rollup.config.js",
     "pretest": "rollup -c rollup.config.js",
