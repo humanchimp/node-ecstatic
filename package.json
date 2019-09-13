@@ -2,7 +2,7 @@
   "name": "@topl/strat",
   "author": "Christopher Thorn <hi@lilthorny.party>",
   "description": "A simple static file server middleware",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "homepage": "https://github.com/humanchimp/strat",
   "repository": {
     "type": "git",
@@ -10,6 +10,9 @@
   },
   "main": "./dist/cjs/strat.js",
   "module": "./dist/esm/strat.js",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/@humanchimp"
+  },
   "scripts": {
     "prepublishOnly": "rollup -c rollup.config.js",
     "pretest": "rollup -c rollup.config.js",
