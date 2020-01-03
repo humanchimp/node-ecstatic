@@ -2,7 +2,7 @@
   "name": "@topl/strat",
   "author": "Christopher Thorn <hi@lilthorny.party>",
   "description": "A simple static file server middleware",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "homepage": "https://github.com/humanchimp/strat",
   "repository": {
     "type": "git",
